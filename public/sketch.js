@@ -1,22 +1,25 @@
+// Drawing tool settings
 let currentTool = 'brush';
 let currentColor = '#000000';
 let brushSize = 10;
 let backgroundColor = '#ffffff';
+
+// Drawing state
 let isDrawing = false;
 let lastX, lastY;
 let startX, startY;
 let canvasScale = 1.0;
 
+// Undo/Redo & Layer Management
 let historyStack = [];
 let currentHistoryIndex = -1;
 let tempCanvas;
-
 let layers = [];
 let activeLayer = 0;
 let history = [];     
 let redoStack = [];
 
-
+// Game Overlay 
 let gameActive = false;
 let gamePromptText = '';
 let gameOverlayAlpha = 0;
@@ -35,20 +38,27 @@ function draw() {
   background(backgroundColor);
 
   push();
+
+  // Center and apply zoom for consistent scaling
   translate(width / 2, height / 2);
   scale(canvasScale);
-  translate(-width / 2, -height / 2);
+  translate(-width / 2, -height / 2); 
 
+  // Draw all layers
   for (let g of layers) image(g, 0, 0);
+
+  // Show live shape preview while dragging  
   if (isDrawing && (currentTool === 'line' || currentTool === 'rectangle' || currentTool === 'circle')) {
     drawPreview();
   }
+
+  // Apply spray effect continuously while mouse is down
   if (isDrawing && currentTool === 'spray') {
     drawSpray(layers[activeLayer]);
   }
   pop();
 
-  
+  // Draw game overlay if active
   if (gameActive && gamePromptText) {
     gameOverlayAlpha = min(gameOverlayAlpha + 10, 180);
     push();
@@ -68,11 +78,15 @@ function draw() {
   }
 }
 
+// Setup UI event listeners
 function setupEventListeners() {
+  
+  // Color picker
   document.getElementById('colorPicker').addEventListener('input', (e) => {
     currentColor = e.target.value;
   });
 
+  // Brush size slider
   const brushSizeSlider = document.getElementById('brushSize');
   const brushSizeValue  = document.getElementById('brushSizeValue');
   brushSizeSlider.addEventListener('input', (e) => {
@@ -80,10 +94,12 @@ function setupEventListeners() {
     brushSizeValue.textContent = brushSize;
   });
 
+  // Tool selection
   document.getElementById('toolSelect').addEventListener('change', (e) => {
     currentTool = e.target.value;
   });
 
+  // Text size slider
   const textSizeSlider = document.getElementById('textSize');
   const textSizeValue  = document.getElementById('textSizeValue');
   if (textSizeSlider && textSizeValue) {
@@ -92,6 +108,7 @@ function setupEventListeners() {
     });
   }
 
+  // Background color picker
   const bgColorPicker = document.getElementById('bgColorPicker');
   if (bgColorPicker) {
     bgColorPicker.addEventListener('input', (e) => {
@@ -99,11 +116,13 @@ function setupEventListeners() {
     });
   }
 
+  // Layer controls
   document.getElementById('newLayerBtn').addEventListener('click', addNewLayer);
   document.getElementById('layerSelect').addEventListener('change', (e) => {
     activeLayer = +e.target.value;
   });
 
+  // Clear Active Layer
   document.getElementById('clearBtn').addEventListener('click', () => {
     if (confirm('Clear the active layer?')) {
       saveState();
@@ -111,14 +130,17 @@ function setupEventListeners() {
     }
   });
 
+  // Save canvas as PNG
   document.getElementById('saveBtn').addEventListener('click', () => {
     saveCanvas('my-painting', 'png');
   });
 
+  // Game mode controls
   const startBtn = document.getElementById('startGameBtn');
   const stopBtn  = document.getElementById('stopGameBtn');
   const promptEl = document.getElementById('gamePrompt');
 
+  // Fetch a random drawing prompt
   startBtn.addEventListener('click', async () => {
     startBtn.disabled = true;
     promptEl.textContent = 'Getting a prompt…';
@@ -142,6 +164,7 @@ function setupEventListeners() {
     }
   });
 
+  // Stop game mode
   stopBtn.addEventListener('click', () => {
     gameActive = false;
     gamePromptText = '';
@@ -152,10 +175,13 @@ function setupEventListeners() {
   stopBtn.disabled = true;
 }
 
+// Mouse event handlers
 function mousePressed() {
+
   let adjustedMouseX = getAdjustedMouseX();
   let adjustedMouseY = getAdjustedMouseY();
-  
+
+  // Handle text tool input
   if (currentTool === 'text') {
     const inputEl = document.getElementById('textInput');
     const sizeEl  = document.getElementById('textSize');
@@ -173,10 +199,12 @@ function mousePressed() {
     return;
   }
 
+  // Start drawing
   isDrawing = true;
   startX = adjustedMouseX; startY = adjustedMouseY;
   lastX  = adjustedMouseX; lastY  = adjustedMouseY;
 
+  // Save state before drawing for undo support
   if (
     currentTool === 'brush' || currentTool === 'eraser' || currentTool === 'spray' ||
     currentTool === 'line'  || currentTool === 'rectangle' || currentTool === 'circle'
@@ -184,14 +212,17 @@ function mousePressed() {
     saveState();
   }
 
+  // Prepare temporary canvas for shape preview
   if (currentTool === 'line' || currentTool === 'rectangle' || currentTool === 'circle') {
     tempCanvas = null;
   }
 
+  // Draw initial point for brush/eraser
   if (currentTool === 'brush' || currentTool === 'eraser') {
     drawPoint(adjustedMouseX, adjustedMouseY);
   }
 }
+
 
 function mouseDragged() {
   if (!isDrawing) return;
@@ -199,6 +230,7 @@ function mouseDragged() {
   let adjustedMouseX = getAdjustedMouseX();
   let adjustedMouseY = getAdjustedMouseY();
 
+  // Continuous brush or eraser strokes
   if (currentTool === 'brush') {
     drawLine(lastX, lastY, adjustedMouseX, adjustedMouseY);
   } else if (currentTool === 'eraser') {
@@ -212,6 +244,7 @@ function mouseDragged() {
 function mouseReleased() {
   if (!isDrawing) return;
 
+  // Finalize shape drawing
   if (currentTool === 'line') {
     drawFinalLine();
   } else if (currentTool === 'rectangle') {
