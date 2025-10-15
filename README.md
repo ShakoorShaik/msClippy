@@ -42,7 +42,6 @@ A modern, feature-rich drawing application inspired by MS Paint with AI-powered 
 - **Express.js**: Minimal web framework for API endpoints
 - **OpenAI API**: GPT-4o-mini model for generating creative drawing prompts
 - **node-fetch**: HTTP client for API calls
-- **dotenv**: Environment variable management
 
 ## 🚀 GETTING STARTED
 
