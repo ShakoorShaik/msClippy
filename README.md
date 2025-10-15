@@ -33,14 +33,14 @@ A modern, feature-rich drawing application inspired by MS Paint with AI-powered 
 
 ### Frontend
 - **p5.js (v1.7.0)**: Canvas-based graphics library for smooth drawing operations
-- **HTML5 & CSS3**: Modern, responsive UI with glassmorphism effects
+- **HTML5 & CSS3**: Modern, responsive UI with polished effects
 - **Google Fonts (Inter)**: Clean, professional typography
+- **Javascipt**: powers the entire interactive drawing app (i.e. handling tools, layers, mouse input, undo/redo, and game logic using p5.js) on the front end
 
 ### Backend
 - **Node.js**: JavaScript runtime for server operations
 - **Express.js**: Minimal web framework for API endpoints
 - **OpenAI API**: GPT-4o-mini model for generating creative drawing prompts
-- **node-fetch**: HTTP client for API calls
 
 ## 🚀 GETTING STARTED
 
