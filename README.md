@@ -34,7 +34,6 @@ A modern, feature-rich drawing application inspired by MS Paint with AI-powered 
 ### Frontend
 - **p5.js (v1.7.0)**: Canvas-based graphics library for smooth drawing operations
 - **HTML5 & CSS3**: Modern, responsive UI with glassmorphism effects
-- **Vanilla JavaScript**: No framework dependencies for the drawing logic
 - **Google Fonts (Inter)**: Clean, professional typography
 
 ### Backend
