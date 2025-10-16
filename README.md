@@ -155,11 +155,6 @@ The game mode uses OpenAI's GPT-4o-mini to generate creative, single-word drawin
 - Allows unlimited prompt generation (subject to API rate limits)
 - Displays prompts both in the sidebar and as a canvas overlay
 
-## 🔒 Security Notes
-
-- Never commit your `.env` file or expose your OpenAI API key
-- Add `.env` to your `.gitignore` file
-
 ## 👨‍💻 Author
 
 Created with ❤️ using p5.js and modern web technologies
