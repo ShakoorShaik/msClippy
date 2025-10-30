@@ -139,6 +139,7 @@ A modern, feature-rich drawing application inspired by MS Paint with AI-powered 
 - **Line**: Click and drag to draw straight lines with preview
 - **Rectangle**: Draw rectangular outlines with live preview
 - **Circle**: Create circles from center point with live preview
+- **Triangle**: Create trianglas from top point with live preview
 - **Text**: Click to place custom text with adjustable size
 
 ### Layer System
@@ -146,7 +147,7 @@ Each layer is an independent p5.Graphics object, allowing for:
 - Non-destructive editing across multiple layers
 - Independent undo/redo history per layer
 - Ability to clear or modify layers without affecting others
-- Composite rendering for the final image
+- Composite rendering for the final image 
 
 ### AI Integration
 The game mode uses OpenAI's GPT-4o-mini to generate creative, single-word drawing prompts. The system:
